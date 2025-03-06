@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>系统初始化...</title>
+    <style>
+        :root {
+            --primary-color: #00ffff;
+            --bg-color: #1a1a1a;
+            --accent-color: #00cccc;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+
+        .loading-container {
+            width: 80%;
+            max-width: 300px;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 4px;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--primary-color) 0%, 
+                var(--accent-color) 100%);
+            border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent);
+            animation: shine 0.8s infinite;
+        }
+
+        .percentage {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            text-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+            font-weight: 700;
+        }
+
+        .loading-text {
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 24px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            opacity: 0.9;
+            animation: textGlow 1.2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .cyber-grid {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="percentage">0%</div>
+        <div class="loading-text">COSMIC OS BOOTING</div>
+    </div>
+    <div class="cyber-grid"></div>
+
+    <script>
+        // 高性能进度动画
+        const progressFill = document.querySelector('.progress-fill');
+        const percentage = document.querySelector('.percentage');
+        const startTime = Date.now();
+        const duration = 1000; // 1秒
+
+        function animate() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            progressFill.style.width = `${progress * 100}%`;
+            percentage.textContent = `${Math.floor(progress * 100)}%`;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                percentage.textContent = "100%";
+                setTimeout(() => {
+                    window.location.href="two.html";
+                }, 150); // 增加短延迟确保动画完成
+            }
+        }
+
+        // 启动动画
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
